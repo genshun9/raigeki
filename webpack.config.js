@@ -1,4 +1,6 @@
 const path = require('path');
+var json = require('json-loader');
+var xml = require('xml-loader');
 
 module.exports = {
   entry: {
@@ -18,6 +20,14 @@ module.exports = {
           cacheDirectory: true,
           presets: ['react', 'es2015']
         }
+      },
+      {
+        loader: 'json',
+        test: /\.json$/
+      },
+      {
+        loader: 'xml',
+        test: /\.xml$/
       }
     ]
   }

@@ -1,6 +1,8 @@
 import React from 'react'
 import DropZone from 'react-dropzone'
 
+var Excel = require('exceljs');
+
 export default class Main extends React.Component {
   constructor() {
     super();
