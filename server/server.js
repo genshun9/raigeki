@@ -7,7 +7,8 @@ var DATA_FILE = './data/data.txt';
 var bodyParser = require('body-parser');
 var formidable = require('formidable');
 var readline = require('readline');
-//var Iconv = require('iconv').Iconv;
+var encoding = require('encoding-japanese');
+var iconv = require('iconv-lite');
 
 //ポートの指定
 app.set('port', process.env.PORT || 3000);
@@ -27,6 +28,7 @@ app.get('/data', function (req, res) {
 });
 
 app.post('/upload', function (req, res) {
+  // ファイルの読み込み
   //var file = fs.readFileSync('./server/data/data.txt');
   //var oldFile = JSON.parse(file);
 
@@ -39,7 +41,14 @@ app.post('/upload', function (req, res) {
     fs.readFile(`./${filePath}`, 'utf-8', function (err, text) {
       //var iconv = new Iconv('UTF-8', 'Shift_JIS//TRANSLIT//IGNORE');
       //var shift_jis_text = iconv.convert(text);
-      res.status(200).send(text);
+      //var TEST = encoding.convert(text, 'SJIS', 'UNICODE');
+      //console.log("test", TEST);
+      //console.log("detect", encoding.detect(TEST));
+      //if(encoding.detect(text) === 'UNICODE') {
+      //  console.log(iconv.encode(text, 'SHIFT-JIS'));
+      //  res.writeHead(200, {'content-type': 'application/json; charset=shift-jis'});
+      //}
+      res.send(iconv.encode(text, 'SHIFT-JIS'));
     });
     //res.writeHead(200, {'content-type': 'application/json; charset=utf-8'});
     //res.status(200).send('OK牧場');

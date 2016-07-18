@@ -29,6 +29,7 @@
     "gulp-babel": "6.1.2",
     "gulp-plumber": "1.1.0",
     "gulp-sourcemaps": "1.6.0",
+    "lodash": "^4.13.1",
     "webpack": "1.13.1"
   },
   "dependencies": {
