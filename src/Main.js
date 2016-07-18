@@ -50,9 +50,12 @@ export default class Main extends React.Component {
   }
 
   uploadCsvFile() {
+    var formData = new FormData();
+    formData.append("userfile", this.state.file[0]);
+
     request
         .post('/upload')
-        .send({'name': this.state.cardData.name, 'ids': this.state.cardData.ids})
+        .send(formData)
         .end(function (err, res) {
           this.setState({uploadFinish: true});
         }.bind(this));

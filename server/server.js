@@ -5,6 +5,8 @@ var app = express();
 var fs = require('fs');
 var DATA_FILE = './data/data.txt';
 var bodyParser = require('body-parser');
+var formidable = require('formidable');
+var readline = require('readline');
 
 //ポートの指定
 app.set('port', process.env.PORT || 3000);
@@ -24,14 +26,18 @@ app.get('/data', function (req, res) {
 });
 
 app.post('/upload', function (req, res) {
-  var file = fs.readFileSync('./server/data/data.txt');
-  var oldFile = JSON.parse(file);
-  var newData = {
-    name: req.body.name,
-    ids: req.body.ids
-  };
-  oldFile.push(newData);
-  res.status(200).send('OK牧場');
+  //var file = fs.readFileSync('./server/data/data.txt');
+  //var oldFile = JSON.parse(file);
+
+  // ローカル内にcsvファイルを一旦保存。
+  const form = new formidable.IncomingForm();
+  form.encoding = 'utf-8';
+  form.uploadDir = './server/data';
+  form.parse(req, function () {
+    res.writeHead(200, {'content-type': 'application/json; charset=utf-8'});
+    res.status(200).send('OK牧場');
+  });
+  //res.status(200).send('OK牧場');
 });
 
 //ルートパスの指定
