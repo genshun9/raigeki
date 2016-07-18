@@ -1,29 +1,39 @@
 import React from 'react'
 import {isNil} from 'lodash'
 
-function getNumber(str) {
-  console.log("before", str);
-  str.substr(1, str.length -1);
-  console.log("after", str);
-  return Number(str);
+function getValue(str) {
+  return str.substr(1, str.length - 2);
 }
 
 export default class List extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      date: props.data.split(',')[4],
-      startTime: props.data.split(',')[17],
-      endTime: props.data.split(',')[18]
+      date: getValue(props.data.split(',')[4]),
+      startTime: getValue(props.data.split(',')[16]),
+      endTime: getValue(props.data.split(',')[17]),
+      workTime: getValue(props.data.split(',')[19])
     }
   };
 
   render() {
-    return (
-        <div>
-          {this.state.date}{this.state.startTime}{this.state.endTime}
-        </div>
-    );
+    // 土日の場合削除する。
+    if (this.state.startTime.substr(1, this.state.startTime.length - 2) === "") {
+      return (
+          <div />
+      )
+    } else {
+
+      return (
+          <div >
+            <input defaultValue={this.state.date}/>
+            <input defaultValue={this.state.startTime}/>
+            <input defaultValue={this.state.endTime}/>
+            <input defaultValue={this.state.workTime}/>
+            <input type="text" placeholder="数値を入力してください!"/>
+          </div>
+      );
+    }
   }
 }
 
