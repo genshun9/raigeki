@@ -7,6 +7,7 @@ var DATA_FILE = './data/data.txt';
 var bodyParser = require('body-parser');
 var formidable = require('formidable');
 var readline = require('readline');
+//var Iconv = require('iconv').Iconv;
 
 //ポートの指定
 app.set('port', process.env.PORT || 3000);
@@ -32,10 +33,16 @@ app.post('/upload', function (req, res) {
   // ローカル内にcsvファイルを一旦保存。
   const form = new formidable.IncomingForm();
   form.encoding = 'utf-8';
-  form.uploadDir = './server/data';
-  form.parse(req, function () {
-    res.writeHead(200, {'content-type': 'application/json; charset=utf-8'});
-    res.status(200).send('OK牧場');
+  form.uploadDir = './server/upload';
+  form.parse(req, function (_, _, files) {
+    var filePath = files.userfile.path;
+    fs.readFile(`./${filePath}`, 'utf-8', function (err, text) {
+      //var iconv = new Iconv('UTF-8', 'Shift_JIS//TRANSLIT//IGNORE');
+      //var shift_jis_text = iconv.convert(text);
+      res.status(200).send(text);
+    });
+    //res.writeHead(200, {'content-type': 'application/json; charset=utf-8'});
+    //res.status(200).send('OK牧場');
   });
   //res.status(200).send('OK牧場');
 });
