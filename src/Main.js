@@ -1,4 +1,5 @@
 import React from 'react'
+import {Button} from 'react-bootstrap'
 import DropZone from 'react-dropzone'
 import request from 'superagent'
 import {isNil} from 'lodash'
@@ -11,7 +12,9 @@ export default class Main extends React.Component {
       uploadFile: null,
       datas: {},
       uploadFinish: false,
-      timeCardDatas: null
+      timeCardDatas: null,
+      genreName: '',
+      additionalHeaders: []
     }
   };
 
@@ -20,7 +23,15 @@ export default class Main extends React.Component {
   }
 
   render() {
-    const header = [];
+    const headers = ['date', 'startTime', 'endTime', 'workTime'].concat(this.state.additionalHeaders);
+
+    const genreAddPanel = (<div>
+      <input value={this.state.genreName} onChange={e => this.setState({genreName: e.target.value})} type="text" placeholder="ジャンルを入力してください"/>
+      <button onClick={this.addGenre.bind(this)} disabled={this.state.genreName === ''}>{'追加'}</button>
+    </div>);
+
+    const headerElm = (<div>{headers.map((h, i) => <input defaultValue={h} key={i}/>)}{(<input defaultValue='restTime'/>)}</div>);
+
     return (
         <div>
           <DropZone
@@ -34,8 +45,10 @@ export default class Main extends React.Component {
           {!isNil(this.state.uploadFile) ? <div>{'ファイルの選択完了です'}</div> : null}
           <button onClick={this.uploadCsvFile.bind(this)} disabled={isNil(this.state.uploadFile)}>{'送信する'}</button>
           {isNil(this.state.timeCardDatas) ? null :
-              this.state.timeCardDatas.map((t, i) => <List data={t} key={i} header={header}/>)
-          }
+              <div>{genreAddPanel}
+                {headerElm}
+                {this.state.timeCardDatas.map((t, i) => <List data={t} key={i} header={headers}/>)}
+              </div>}
         </div>
     );
   }
@@ -49,7 +62,7 @@ export default class Main extends React.Component {
   }
 
   onSelectFile(file) {
-    this.setState({uploadFile: file, timeCardDatas: null})
+    this.setState({uploadFile: file, timeCardDatas: null, additionalHeaders: []})
   }
 
   uploadCsvFile() {
@@ -73,5 +86,9 @@ export default class Main extends React.Component {
 
           this.setState({uploadFile: null, uploadFinish: true, timeCardDatas: dataArray});
         }.bind(this));
+  }
+
+  addGenre() {
+    this.setState({genreName: '', additionalHeaders: this.state.additionalHeaders.concat(this.state.genreName)})
   }
 }
