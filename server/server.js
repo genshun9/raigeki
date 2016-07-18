@@ -2,36 +2,36 @@
 
 var express = require('express');
 var app = express();
-//var fs = require('fs');
-//var DATA_FILE = './data/data.txt';
+var fs = require('fs');
+var DATA_FILE = './data/data.txt';
+var bodyParser = require('body-parser');
 
 //ポートの指定
 app.set('port', process.env.PORT || 3000);
 
 app.use(express.static('./'));
 
+// post処理時に、req.bodyがundefinedになるため、body-parserが必要。
+app.use(bodyParser());
+
 app.get('/', function (req, res) {
   res.send('index.html');
 });
 
 app.get('/data', function (req, res) {
-  //return new Promise(function (resolve, reject) {
-  //  fs.readFile(DATA_FILE, function (err, data) {
-  //        if (err) {
-  //          reject(err); // errがあればrejectを呼び出す
-  //          return;
-  //        }
-  //        resolve(data); // errがなければ成功とみなしresolveを呼び出す
-  //      })
-  //      .then(data => {
-  //        res.json(JSON.parse(data));
-  //      })
-  //});
-  var data = [
-    {"name": "raigeki", "ids": [10, 20, 30]},
-    {"name": "sangan", "ids": [300, 400]}
-  ];
-  res.json(data);
+  var file = fs.readFileSync('./server/data/data.txt');
+  res.json(JSON.parse(file));
+});
+
+app.post('/upload', function (req, res) {
+  var file = fs.readFileSync('./server/data/data.txt');
+  var oldFile = JSON.parse(file);
+  var newData = {
+    name: req.body.name,
+    ids: req.body.ids
+  };
+  oldFile.push(newData);
+  res.status(200).send('OK牧場');
 });
 
 //ルートパスの指定

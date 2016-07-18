@@ -8,7 +8,9 @@ export default class Main extends React.Component {
     this.state = {
       file: null,
       validFile: false,
-      datas: {}
+      datas: {},
+      cardData: {"name": "blue-eyes", "ids": [20, 30]},
+      uploadFinish: false
     }
   };
 
@@ -29,7 +31,8 @@ export default class Main extends React.Component {
           </DropZone>
           {this.state.validFile ? <div>{'ファイルの選択完了です'}</div> : null}
           {Object.keys(this.state.datas).length ? this.state.datas.map(d => <div key={d.name}>{d.name}</div>) : null}
-
+          {this.state.uploadFinish ? <div>{'アップロード完了です'}</div> : null}
+          <button onClick={this.uploadCsvFile.bind(this)} disabled={!this.state.validFile}>{'送信する'}</button>
         </div>
     );
   }
@@ -44,5 +47,14 @@ export default class Main extends React.Component {
 
   onSelectFile(file) {
     this.setState({file: file, validFile: true})
+  }
+
+  uploadCsvFile() {
+    request
+        .post('/upload')
+        .send({'name': this.state.cardData.name, 'ids': this.state.cardData.ids})
+        .end(function (err, res) {
+          this.setState({uploadFinish: true});
+        }.bind(this));
   }
 }
