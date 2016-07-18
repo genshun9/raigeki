@@ -1,0 +1,4 @@
+[
+  {"name": "raigeki", "ids": [10, 20, 30]},
+  {"name": "sangan", "ids": [300, 400]}
+]
