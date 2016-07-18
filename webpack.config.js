@@ -1,6 +1,6 @@
 const path = require('path');
 var json = require('json-loader');
-var xml = require('xml-loader');
+//var xml = require('xml-loader');
 
 module.exports = {
   entry: {
@@ -24,10 +24,10 @@ module.exports = {
       {
         loader: 'json',
         test: /\.json$/
-      },
-      {
-        loader: 'xml',
-        test: /\.xml$/
+      //},
+      //{
+      //  loader: 'xml',
+      //  test: /\.xml$/
       }
     ]
   }
