@@ -11,10 +11,11 @@ export default class List extends React.Component {
     super(props);
     this.state = {
       header: props.header,
-      date: getValue(props.data.split(',')[4]),
-      startTime: getValue(props.data.split(',')[16]),
-      endTime: getValue(props.data.split(',')[17]),
-      workTime: getValue(props.data.split(',')[19])
+      id: props.data.id,
+      date: props.data.date,
+      startTime: props.data.startTime,
+      endTime: props.data.endTime,
+      workTime: props.data.workTime
     };
 
     this.state.restTime = this.state.workTime;

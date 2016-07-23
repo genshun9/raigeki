@@ -4,6 +4,7 @@ import DropZone from 'react-dropzone'
 import request from 'superagent'
 import {isNil} from 'lodash'
 import List from './List.jsx'
+import {getDatas} from './stores/TimeDataStore.js'
 
 export default class Main extends React.Component {
   constructor(props) {
@@ -73,18 +74,10 @@ export default class Main extends React.Component {
         .post('/upload')
         .send(formData)
         .end(function (err, res) {
-          var dataArray = res.text.split(/\r\n|\r|\n/);
-          // 現在文字コードの変換が上手く行かず、ヘッダーの文字列（日本語）が文字化けしているので、1行目を削除する。
-          dataArray.shift();
-          var sumTime = dataArray[0].split(',')[19];
 
-          // 文字化けするため、2行目の合計時間を取得した後、2行目を削除する。
-          dataArray.shift();
+          var timeDatas = getDatas(res.text.split(/\r\n|\r|\n/));
 
-          // 何故か最後に空行を認識してしまうので、削除する。
-          dataArray.pop();
-
-          this.setState({uploadFile: null, uploadFinish: true, timeCardDatas: dataArray});
+          this.setState({uploadFile: null, uploadFinish: true, timeCardDatas: timeDatas});
         }.bind(this));
   }
 
