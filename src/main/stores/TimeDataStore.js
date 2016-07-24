@@ -2,6 +2,7 @@ import I from 'immutable'
 import {isNil} from 'lodash'
 import If from 'ifx'
 import {getTimeDataFromAction, editGenreTimes, editRestTime} from '../models/TimeDataModel.js'
+import {addDigits} from '../utils/dataUtils.js'
 
 let sumTime = null;
 let timeDatas = null;
@@ -49,7 +50,7 @@ export function getDetailsFromStore(id) {
     } else if (t.genreTimes.toArray()[id - 1].time === '') {
       details.push(`${t.date} ${'00:00'}\n`);
     } else if (!isNil(t.genreTimes.toArray()[id - 1].time)) {
-      details.push(`${t.date} ${t.genreTimes.toArray()[id - 1].time}\n`);
+      details.push(`${t.date} ${addDigits(t.genreTimes.toArray()[id - 1].time)}\n`);
     }
   });
 
@@ -63,7 +64,7 @@ export function getRestTimeDetailsFromStore() {
     if (t.startTime === '') {
       // 土日のデータを削除する
     } else {
-      details.push(`${t.date} ${t.restTime}\n`);
+      details.push(`${t.date} ${addDigits(t.restTime)}\n`);
     }
   });
 
