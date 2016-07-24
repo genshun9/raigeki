@@ -25,3 +25,10 @@ export function editGenreTimes(targetData, targetGenreTimes) {
   timeData.genreTimes = targetGenreTimes;
   return timeData
 }
+
+export function editRestTime(targetData, restTime) {
+  var timeData = targetData;
+  delete timeData.restTime;
+  timeData.restTime = restTime;
+  return timeData;
+}

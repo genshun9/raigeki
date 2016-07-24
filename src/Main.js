@@ -4,7 +4,7 @@ import DropZone from 'react-dropzone'
 import request from 'superagent'
 import {isNil} from 'lodash'
 import List from './List.jsx'
-import {getDatas, addGenreTimes} from './stores/TimeDataStore.js'
+import {getDatas, addGenreTimes, updateRestTime} from './stores/TimeDataStore.js'
 
 export default class Main extends React.Component {
   constructor(props) {
@@ -27,11 +27,13 @@ export default class Main extends React.Component {
     const headers = ['date', 'startTime', 'endTime', 'workTime'].concat(this.state.additionalHeaders);
 
     const genreAddPanel = (<div>
-      <input value={this.state.genreName} onChange={e => this.setState({genreName: e.target.value})} type="text" placeholder="ジャンルを入力してください"/>
+      <input value={this.state.genreName} onChange={e => this.setState({genreName: e.target.value})} type="text"
+             placeholder="ジャンルを入力してください"/>
       <button onClick={this.addGenre.bind(this)} disabled={this.state.genreName === ''}>{'追加'}</button>
     </div>);
 
-    const headerElm = (<div>{headers.map((h, i) => <input defaultValue={h} key={i}/>)}{(<input defaultValue='restTime'/>)}</div>);
+    const headerElm = (
+        <div>{headers.map((h, i) => <input defaultValue={h} key={i}/>)}{(<input defaultValue='restTime'/>)}</div>);
 
     return (
         <div>
@@ -48,8 +50,9 @@ export default class Main extends React.Component {
           {isNil(this.state.timeCardDatas) ? null :
               <div>{genreAddPanel}
                 {headerElm}
-                {this.state.timeCardDatas.map((t, i) => <List data={t} key={i} header={headers}
-                                                              addGenreTimes={this.addGenreTimes.bind(this)} />)}
+                {this.state.timeCardDatas.map((t, i) =>
+                    <List data={t} key={i} header={headers} addGenreTimes={this.addGenreTimes.bind(this)}
+                          updateRestTime={this.updateRestTime.bind(this)}/>)}
               </div>}
         </div>
     );
@@ -88,6 +91,11 @@ export default class Main extends React.Component {
 
   addGenreTimes(id, genreTimeId, value) {
     var timeDatas = addGenreTimes(id, genreTimeId, value);
+    this.setState({timeCardDatas: timeDatas});
+  }
+
+  updateRestTime(id, updatedRestTime) {
+    var timeDatas = updateRestTime(id, updatedRestTime);
     this.setState({timeCardDatas: timeDatas});
   }
 }

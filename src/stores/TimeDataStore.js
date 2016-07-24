@@ -1,5 +1,5 @@
 import I from 'immutable'
-import {getTimeDataFromAction, editGenreTimes} from '../models/TimeDataModel.js'
+import {getTimeDataFromAction, editGenreTimes, editRestTime} from '../models/TimeDataModel.js'
 
 let sumTime = null;
 let timeDatas = null;
@@ -28,5 +28,11 @@ export function addGenreTimes(timeDataId, genreTimeId, inputGenreTime) {
   targetGenreTimes = targetGenreTimes.set(genreTimeId - 1, {id: genreTimeId, time: inputGenreTime});
 
   timeDatas = timeDatas.set(timeDataId, editGenreTimes(targetData, targetGenreTimes));
+  return timeDatas;
+}
+
+export function updateRestTime(id, updatedRestTime) {
+  var targetData = timeDatas.get(id);
+  timeDatas = timeDatas.set(id, editRestTime(targetData, updatedRestTime));
   return timeDatas;
 }

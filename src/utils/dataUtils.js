@@ -9,6 +9,13 @@ export function convertDataFromMinutes(workTime, sumGenreTime) {
   var restTime = workTime - sumGenreTime;
   var hourPart = Math.floor(restTime / 60);
   var minutePart = restTime - hourPart * 60;
-  var timeData = `${hourPart}:${minutePart}`;
+  var timeData = `${addDigits(hourPart)}:${addDigits(minutePart)}`;
   return timeData;
+}
+
+export function addDigits(input) {
+  if(String(input).length === 1) {
+    return `0${String(input)}`;
+  }
+  return String(input);
 }
