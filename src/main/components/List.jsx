@@ -1,8 +1,8 @@
 import React from 'react'
 import {isNil} from 'lodash'
 import If from 'ifx'
-import {addGenreTimes} from './stores/TimeDataStore.js'
-import {convertMinutesFromData, convertDataFromMinutes} from './utils/dataUtils.js'
+import {addGenreTimes} from '../stores/TimeDataStore.js'
+import {convertMinutesFromData, convertDataFromMinutes} from '../utils/dataUtils.js'
 
 function getValue(str) {
   return str.substr(1, str.length - 2);

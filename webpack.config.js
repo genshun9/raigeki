@@ -4,7 +4,7 @@ var json = require('json-loader');
 
 module.exports = {
   entry: {
-    bundle: './src/entry.js'
+    bundle: './src/main/entry.js'
   },
   output: {
     path: path.join(__dirname, 'public'),

@@ -6,7 +6,7 @@ import request from 'superagent'
 import {isNil} from 'lodash'
 import List from './List.jsx'
 //import TimeModal from './TimeModal.jsx'
-import {getDatas, addGenreTimes, updateRestTime, getDetailsFromStore, getRestTimeDetailsFromStore} from './stores/TimeDataStore.js'
+import {getDatas, addGenreTimes, updateRestTime, getDetailsFromStore, getRestTimeDetailsFromStore} from '../stores/TimeDataStore.js'
 
 export default class Main extends React.Component {
   constructor(props) {
