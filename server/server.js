@@ -3,7 +3,6 @@
 var express = require('express');
 var app = express();
 var fs = require('fs');
-var DATA_FILE = './data/data.txt';
 var bodyParser = require('body-parser');
 var formidable = require('formidable');
 var readline = require('readline');
@@ -22,10 +21,11 @@ app.get('/', function (req, res) {
   res.send('index.html');
 });
 
-app.get('/data', function (req, res) {
-  var file = fs.readFileSync('./server/data/data.txt');
-  res.json(JSON.parse(file));
-});
+//app.get('/data', function (req, res) {
+//  ローカル内のファイルを取得して画面に返却するメソッド
+//  var file = fs.readFileSync('./server/data/data.txt');
+//  res.json(JSON.parse(file));
+//});
 
 app.post('/upload', function (req, res) {
   // ファイルの読み込み
@@ -39,6 +39,7 @@ app.post('/upload', function (req, res) {
   form.parse(req, function (_, _, files) {
     var filePath = files.userfile.path;
     fs.readFile(`./${filePath}`, 'utf-8', function (err, text) {
+      // TODO: 文字化け解消に取り組んだ痕跡を残す（選択したcsvファイルの文字化け問題は解消していない）
       //var iconv = new Iconv('UTF-8', 'Shift_JIS//TRANSLIT//IGNORE');
       //var shift_jis_text = iconv.convert(text);
       //var TEST = encoding.convert(text, 'SJIS', 'UNICODE');
@@ -50,19 +51,9 @@ app.post('/upload', function (req, res) {
       //}
       res.send(iconv.encode(text, 'SHIFT-JIS'));
     });
-    //res.writeHead(200, {'content-type': 'application/json; charset=utf-8'});
-    //res.status(200).send('OK牧場');
   });
-  //res.status(200).send('OK牧場');
 });
 
-//ルートパスの指定
-//var clientPath = __dirname.replace("/server", "/client");
-//app.use('/', express.static(clientPath));
-
-//app.get('/', function(req, res) {
-//  res.send('hello world');
-//});
 
 //エラーが発生した場合の指定
 app.use(function (err, req, res, next) {

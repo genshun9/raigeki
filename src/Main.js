@@ -13,7 +13,7 @@ export default class Main extends React.Component {
     super(props);
     this.state = {
       uploadFile: null,
-      datas: {},
+      //datas: {},
       uploadFinish: false,
       timeCardDatas: null,
       genreName: '',
@@ -87,11 +87,12 @@ export default class Main extends React.Component {
   }
 
   loadDatas() {
-    request
-        .get('/data')
-        .end(function (err, res) {
-          this.setState({datas: res.body});
-        }.bind(this));
+    // 読み込み時に、ローカル内のファイルを取得するメソッドである。
+    //request
+    //    .get('/data')
+    //    .end(function (err, res) {
+    //      this.setState({datas: res.body});
+    //    }.bind(this));
   }
 
   onSelectFile(file) {
