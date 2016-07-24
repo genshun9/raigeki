@@ -35,7 +35,7 @@ app.post('/upload', function (req, res) {
   // ローカル内にcsvファイルを一旦保存。
   const form = new formidable.IncomingForm();
   form.encoding = 'utf-8';
-  form.uploadDir = './server/upload';
+  form.uploadDir = './src/server/upload';
   form.parse(req, function (_, _, files) {
     var filePath = files.userfile.path;
     fs.readFile(`./${filePath}`, 'utf-8', function (err, text) {

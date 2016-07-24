@@ -4,4 +4,4 @@ dist/*
 node_modules/*
 public/*
 server/node_modules/*
-server/upload/*
+src/server/upload/*
