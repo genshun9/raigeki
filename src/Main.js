@@ -4,7 +4,7 @@ import DropZone from 'react-dropzone'
 import request from 'superagent'
 import {isNil} from 'lodash'
 import List from './List.jsx'
-import {getDatas} from './stores/TimeDataStore.js'
+import {getDatas, addGenreTimes} from './stores/TimeDataStore.js'
 
 export default class Main extends React.Component {
   constructor(props) {
@@ -48,7 +48,8 @@ export default class Main extends React.Component {
           {isNil(this.state.timeCardDatas) ? null :
               <div>{genreAddPanel}
                 {headerElm}
-                {this.state.timeCardDatas.map((t, i) => <List data={t} key={i} header={headers}/>)}
+                {this.state.timeCardDatas.map((t, i) => <List data={t} key={i} header={headers}
+                                                              addGenreTimes={this.addGenreTimes.bind(this)} />)}
               </div>}
         </div>
     );
@@ -83,5 +84,10 @@ export default class Main extends React.Component {
 
   addGenre() {
     this.setState({genreName: '', additionalHeaders: this.state.additionalHeaders.concat(this.state.genreName)})
+  }
+
+  addGenreTimes(id, genreTimeId, value) {
+    var timeDatas = addGenreTimes(id, genreTimeId, value);
+    this.setState({timeCardDatas: timeDatas});
   }
 }

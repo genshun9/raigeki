@@ -1,5 +1,5 @@
 import I from 'immutable'
-import {getTimeDataFromAction} from '../models/TimeDataModel.js'
+import {getTimeDataFromAction, editGenreTimes} from '../models/TimeDataModel.js'
 
 let sumTime = null;
 let timeDatas = null;
@@ -17,6 +17,16 @@ export function getDatas(array) {
   // 何故か最後に空行を認識してしまうので、削除する。
   array.pop();
 
-  timeDatas = I.Map(array.map((a, i) => [i + 1, getTimeDataFromAction(i + 1, a)]));
+  timeDatas = I.OrderedMap(array.map((a, i) => [i + 1, getTimeDataFromAction(i + 1, a)]));
+  return timeDatas;
+}
+
+export function addGenreTimes(timeDataId, genreTimeId, inputGenreTime) {
+  var targetData = timeDatas.get(timeDataId);
+
+  let targetGenreTimes = targetData.genreTimes;
+  targetGenreTimes = targetGenreTimes.set(genreTimeId - 1, {id: genreTimeId, time: inputGenreTime});
+
+  timeDatas = timeDatas.set(timeDataId, editGenreTimes(targetData, targetGenreTimes));
   return timeDatas;
 }
