@@ -42,8 +42,9 @@ export function updateRestTime(id, updatedRestTime) {
 export function getDetailsFromStore(id) {
   var details = [];
   timeDatas.forEach(t => {
-    // 土日のデータを削除する
-    if (isNil(t.genreTimes.toArray()[id - 1])) {
+    if (t.startTime === '') {
+      // 土日のデータを削除する
+    } else if (isNil(t.genreTimes.toArray()[id - 1])) {
       details.push(`${t.date} ${'00:00'}\n`);
     } else if (t.genreTimes.toArray()[id - 1].time === '') {
       details.push(`${t.date} ${'00:00'}\n`);
