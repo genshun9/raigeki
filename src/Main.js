@@ -1,10 +1,12 @@
 import React from 'react'
 import {Button} from 'react-bootstrap'
 import DropZone from 'react-dropzone'
+import CopyToClipboard from 'react-copy-to-clipboard'
 import request from 'superagent'
 import {isNil} from 'lodash'
 import List from './List.jsx'
-import {getDatas, addGenreTimes, updateRestTime} from './stores/TimeDataStore.js'
+//import TimeModal from './TimeModal.jsx'
+import {getDatas, addGenreTimes, updateRestTime, getDetailsFromStore} from './stores/TimeDataStore.js'
 
 export default class Main extends React.Component {
   constructor(props) {
@@ -15,7 +17,9 @@ export default class Main extends React.Component {
       uploadFinish: false,
       timeCardDatas: null,
       genreName: '',
-      additionalHeaders: []
+      additionalHeaders: [],
+      modalOpen: false,
+      targetGenreId: null
     }
   };
 
@@ -32,8 +36,28 @@ export default class Main extends React.Component {
       <button onClick={this.addGenre.bind(this)} disabled={this.state.genreName === ''}>{'追加'}</button>
     </div>);
 
+    const getDetails = id => getDetailsFromStore(id);
+
     const headerElm = (
-        <div><tr>{headers.map((h, i) => <td><input defaultValue={h} key={i}/></td>)}{(<td><input defaultValue='restTime'/></td>)}</tr></div>);
+        <div>
+          <tr>{headers.map((h, i) =>
+              (i > 3) ? <td><input defaultValue={h} key={i}/>
+                <CopyToClipboard text={this.state.additionalHeaders === 0 ? '' : getDetails(i - 3)} onCopy={() => {}}>
+                  <button >{'コピー'}</button>
+                </CopyToClipboard>
+              </td>
+                  : <td><input defaultValue={h} key={i}/></td>)}
+            {(<td><input defaultValue='restTime'/>
+              <button>{'コピー'}</button>
+            </td>)}
+          </tr>
+        </div>);
+
+    //const getTitle = id => this.state.additionalHeaders[id];
+    //
+    //const timeModalElm = this.state.additionalHeaders.length === 0 ? null :
+    //    (<TimeModal show={this.state.modalOpen} title={getTitle(this.state.targetGenreId - 1)}
+    //                genreId={this.state.targetGenreId} onHide={this.setState({modalOpen: !this.state.modalOpen})}/>);
 
     return (
         <div>

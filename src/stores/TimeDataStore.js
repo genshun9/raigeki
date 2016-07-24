@@ -1,4 +1,6 @@
 import I from 'immutable'
+import {isNil} from 'lodash'
+import If from 'ifx'
 import {getTimeDataFromAction, editGenreTimes, editRestTime} from '../models/TimeDataModel.js'
 
 let sumTime = null;
@@ -35,4 +37,21 @@ export function updateRestTime(id, updatedRestTime) {
   var targetData = timeDatas.get(id);
   timeDatas = timeDatas.set(id, editRestTime(targetData, updatedRestTime));
   return timeDatas;
+}
+
+export function getDetailsFromStore(id) {
+  var details = [];
+  timeDatas.forEach(t => {
+    // 土日のデータを削除する
+    if (isNil(t.genreTimes.toArray()[id - 1])) {
+      details.push(`${t.date} ${'00:00'}\n`);
+    } else if (t.genreTimes.toArray()[id - 1].time === '') {
+      details.push(`${t.date} ${'00:00'}\n`);
+    } else if (!isNil(t.genreTimes.toArray()[id - 1].time)) {
+      details.push(`${t.date} ${t.genreTimes.toArray()[id - 1].time}\n`);
+    }
+  });
+
+  // カンマ区切りになっているので、カンマを削除する。
+  return String(details).replace(/,/g, '');
 }
