@@ -33,7 +33,7 @@ export default class Main extends React.Component {
     </div>);
 
     const headerElm = (
-        <div>{headers.map((h, i) => <input defaultValue={h} key={i}/>)}{(<input defaultValue='restTime'/>)}</div>);
+        <div><tr>{headers.map((h, i) => <td><input defaultValue={h} key={i}/></td>)}{(<td><input defaultValue='restTime'/></td>)}</tr></div>);
 
     return (
         <div>

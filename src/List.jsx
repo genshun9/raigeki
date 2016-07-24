@@ -36,19 +36,36 @@ export default class List extends React.Component {
     }
 
     const additionalInputElms = this.state.header.map((h, i) =>
-        (i > 3) ? <input type="text" placeholder={`${h}を入力してください`} key={i}
-                         onChange={e => this.props.addGenreTimes(this.state.id, i - 3, e.target.value)} /> : null
+        (i > 3) ? <td>
+          <div><input type="text" placeholder={`${h}を入力してください`} key={i}
+                      onChange={e => this.props.addGenreTimes(this.state.id, i - 3, e.target.value)}/>
+          </div>
+        </td> : null
     );
 
     return (
         <div >
-          <input defaultValue={this.state.date}/>
-          <input defaultValue={this.state.startTime}/>
-          <input defaultValue={this.state.endTime}/>
-          <input defaultValue={this.state.workTime}/>
-          {additionalInputElms}
-          <input value={this.state.restTime}/>
-          <button disabled={this.state.genreTimes.size === 0} onClick={this.updateRestTime.bind(this)}>{'restTime更新'}</button>
+          <tr>
+            <td>
+              <div><input defaultValue={this.state.date} disabled={false}/></div>
+            </td>
+            <td>
+              <div><input defaultValue={this.state.startTime}/></div>
+            </td>
+            <td>
+              <div><input defaultValue={this.state.endTime}/></div>
+            </td>
+            <td>
+              <div><input defaultValue={this.state.workTime}/></div>
+            </td>
+            {additionalInputElms}
+            <td>
+              <div><input value={this.state.restTime}/>
+                <button disabled={this.state.genreTimes.size === 0}
+                        onClick={this.updateRestTime.bind(this)}>{'restTime更新'}</button>
+              </div>
+            </td>
+          </tr>
         </div>
     );
   }
