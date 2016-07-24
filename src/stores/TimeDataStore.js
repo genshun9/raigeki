@@ -56,3 +56,17 @@ export function getDetailsFromStore(id) {
   // カンマ区切りになっているので、カンマを削除する。
   return String(details).replace(/,/g, '');
 }
+
+export function getRestTimeDetailsFromStore() {
+  var details = [];
+  timeDatas.forEach(t => {
+    if (t.startTime === '') {
+      // 土日のデータを削除する
+    } else {
+      details.push(`${t.date} ${t.restTime}\n`);
+    }
+  });
+
+  // カンマ区切りになっているので、カンマを削除する。
+  return String(details).replace(/,/g, '');
+}

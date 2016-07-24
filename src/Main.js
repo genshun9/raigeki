@@ -6,7 +6,7 @@ import request from 'superagent'
 import {isNil} from 'lodash'
 import List from './List.jsx'
 //import TimeModal from './TimeModal.jsx'
-import {getDatas, addGenreTimes, updateRestTime, getDetailsFromStore} from './stores/TimeDataStore.js'
+import {getDatas, addGenreTimes, updateRestTime, getDetailsFromStore, getRestTimeDetailsFromStore} from './stores/TimeDataStore.js'
 
 export default class Main extends React.Component {
   constructor(props) {
@@ -38,6 +38,8 @@ export default class Main extends React.Component {
 
     const getDetails = id => getDetailsFromStore(id);
 
+    const getRestTimeDetails = () => getRestTimeDetailsFromStore();
+
     const headerElm = (
         <div>
           <tr>{headers.map((h, i) =>
@@ -48,7 +50,9 @@ export default class Main extends React.Component {
               </td>
                   : <td><input defaultValue={h} key={i}/></td>)}
             {(<td><input defaultValue='restTime'/>
-              <button>{'コピー'}</button>
+              <CopyToClipboard text={isNil(this.state.timeCardDatas) ? '' : getRestTimeDetails()} onCopy={() => {}}>
+                <button>{'コピー'}</button>
+              </CopyToClipboard>
             </td>)}
           </tr>
         </div>);
