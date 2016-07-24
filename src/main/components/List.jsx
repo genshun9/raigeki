@@ -37,7 +37,7 @@ export default class List extends React.Component {
 
     const additionalInputElms = this.state.header.map((h, i) =>
         (i > 3) ? <td>
-          <div><input type="text" placeholder={`${h}を入力してください`} key={i}
+          <div><input type="text" placeholder={`${h}に関する時間を入力`} key={i}
                       onChange={e => this.props.addGenreTimes(this.state.id, i - 3, e.target.value)}/>
           </div>
         </td> : null
@@ -62,7 +62,7 @@ export default class List extends React.Component {
             <td>
               <div><input value={this.state.restTime}/>
                 <button disabled={this.state.genreTimes.size === 0}
-                        onClick={this.updateRestTime.bind(this)}>{'restTime更新'}</button>
+                        onClick={this.updateRestTime.bind(this)}>{'残りの時間を更新'}</button>
               </div>
             </td>
           </tr>

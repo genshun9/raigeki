@@ -28,12 +28,12 @@ export default class Main extends React.Component {
   }
 
   render() {
-    const headers = ['date', 'startTime', 'endTime', 'workTime'].concat(this.state.additionalHeaders);
+    const headers = ['日', '開始時刻', '終了時刻', '勤務時間'].concat(this.state.additionalHeaders);
 
     const genreAddPanel = (<div>
       <input value={this.state.genreName} onChange={e => this.setState({genreName: e.target.value})} type="text"
-             placeholder="ジャンルを入力してください"/>
-      <button onClick={this.addGenre.bind(this)} disabled={this.state.genreName === ''}>{'追加'}</button>
+             placeholder="カテゴリー名を入力"/>
+      <button onClick={this.addGenre.bind(this)} disabled={this.state.genreName === ''}>{'カテゴリーの追加'}</button>
     </div>);
 
     const getDetails = id => getDetailsFromStore(id);
@@ -49,7 +49,7 @@ export default class Main extends React.Component {
                 </CopyToClipboard>
               </td>
                   : <td><input defaultValue={h} key={i}/></td>)}
-            {(<td><input defaultValue='restTime'/>
+            {(<td><input defaultValue='残りの時間'/>
               <CopyToClipboard text={isNil(this.state.timeCardDatas) ? '' : getRestTimeDetails()} onCopy={() => {}}>
                 <button>{'コピー'}</button>
               </CopyToClipboard>
@@ -67,14 +67,14 @@ export default class Main extends React.Component {
         <div>
           <DropZone
               onDrop={this.onSelectFile.bind(this)}
-              accept="text/csv,text/plain">
+              accept="text/csv">
             <div>
               ファイルを選択またはドラッグ&ドロップしてください
-              <p>形式: csv/excel</p>
+              <p>形式: csv</p>
             </div>
           </DropZone>
-          {!isNil(this.state.uploadFile) ? <div>{'ファイルの選択完了です'}</div> : null}
-          <button onClick={this.uploadCsvFile.bind(this)} disabled={isNil(this.state.uploadFile)}>{'送信する'}</button>
+          {!isNil(this.state.uploadFile) ? <div>{'csvファイルの選択完了です'}</div> : null}
+          <button onClick={this.uploadCsvFile.bind(this)} disabled={isNil(this.state.uploadFile)}>{'データを表示する'}</button>
           {isNil(this.state.timeCardDatas) ? null :
               <div>{genreAddPanel}
                 {headerElm}
