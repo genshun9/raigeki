@@ -1,43 +1,45 @@
-//var test = require('./controllers/Get');
+const express = require('express');
+const fs = require('fs');
+const bodyParser = require('body-parser');
+const formidable = require('formidable');
+const readline = require('readline');
+const encoding = require('encoding-japanese');
+const iconv = require('iconv-lite');
 
-var express = require('express');
+/**
+ * initial 設定
+ * ポート3000を指定
+ * post処理に、req.bodyがunderfindになるので、body-parserを利用
+ * 指定したポートでリクエスト待機状態にする
+ */
 var app = express();
-var fs = require('fs');
-var bodyParser = require('body-parser');
-var formidable = require('formidable');
-var readline = require('readline');
-var encoding = require('encoding-japanese');
-var iconv = require('iconv-lite');
-
-//ポートの指定
 app.set('port', process.env.PORT || 3000);
-
 app.use(express.static('./'));
-
-// post処理時に、req.bodyがundefinedになるため、body-parserが必要。
 app.use(bodyParser());
+app.listen(app.get('port'), function () {
+  console.log('server listening on port :' + app.get('port'));
+});
 
+/**
+ * クライアント側に対して一番最初にindex.htmlを返却
+ */
 app.get('/', function (req, res) {
   res.send('index.html');
 });
 
-//app.get('/data', function (req, res) {
-//  ローカル内のファイルを取得して画面に返却するメソッド
-//  var file = fs.readFileSync('./server/data/data.txt');
-//  res.json(JSON.parse(file));
-//});
-
+/**
+ * クライアント側でアップロードされたcsvファイルを、ローカルに保存する
+ * その後csvファイルの中身を文字列として画面に返却
+ */
 app.post('/upload', function (req, res) {
   // ファイルの読み込み
   //var file = fs.readFileSync('./server/data/data.txt');
   //var oldFile = JSON.parse(file);
-
-  // ローカル内にcsvファイルを一旦保存。
   const form = new formidable.IncomingForm();
   form.encoding = 'utf-8';
   form.uploadDir = './src/server/upload';
   form.parse(req, function (_, _, files) {
-    var filePath = files.userfile.path;
+    const filePath = files.userfile.path;
     fs.readFile(`./${filePath}`, 'utf-8', function (err, text) {
       // TODO: 文字化け解消に取り組んだ痕跡を残す（選択したcsvファイルの文字化け問題は解消していない）
       //var iconv = new Iconv('UTF-8', 'Shift_JIS//TRANSLIT//IGNORE');
@@ -54,14 +56,10 @@ app.post('/upload', function (req, res) {
   });
 });
 
-
-//エラーが発生した場合の指定
+/**
+ * エラーが発生した場合
+ */
 app.use(function (err, req, res, next) {
   console.log(err.stack);
   res.status(500).send(err.message);
-});
-
-//指定したポートでリクエスト待機状態にする
-app.listen(app.get('port'), function () {
-  console.log('server listening on port :' + app.get('port'));
 });

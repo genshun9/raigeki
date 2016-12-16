@@ -1,28 +1,48 @@
+import AppDispatcher from '../dispatchers/AppDispatcher.js'
+import {ActionTypes} from '../constants/Constants.js'
+import Store from './Store.js'
 import I from 'immutable'
 import {isNil} from 'lodash'
 import If from 'ifx'
-import {getTimeDataFromAction, editGenreTimes, editRestTime} from '../models/TimeDataModel.js'
+import {getUploadFileFromAction, editGenreTimes, editRestTime} from '../models/UploadFile.js'
 import {addDigits} from '../utils/dataUtils.js'
 
-let sumTime = null;
-let timeDatas = null;
+let totalTime = null;
+let fileDatas = null;
 
-export function getDatas(array) {
-
-  // 現在文字コードの変換が上手く行かず、ヘッダーの文字列（日本語）が文字化けしているので、1行目を削除する。
+function store(array) {
+  // 現在文字コードの変換が上手く行かず、ヘッダーの文字列（日本語）が文字化けしている
+  // 初めに1行目を削除する。
   array.shift();
-
-  sumTime = array[0].split(',')[19];
-
-  // 文字化けするため、2行目の合計時間を取得した後、2行目を削除する。
+  
+  // 2行目の合計時間を取得した後、2行目を削除する。
+  totalTime = array[0].split(',')[19];
   array.shift();
-
-  // 何故か最後に空行を認識してしまうので、削除する。
+  
+  // 最後に空行を認識してしまうので、削除する。
   array.pop();
-
-  timeDatas = I.OrderedMap(array.map((a, i) => [i + 1, getTimeDataFromAction(i + 1, a)]));
-  return timeDatas;
+  
+  fileDatas = I.OrderedMap(array.map(
+    (a, i) => [i + 1, getUploadFileFromAction(i + 1, a)]
+  ));
 }
+
+// export function getDatas(array) {
+//
+//   // 現在文字コードの変換が上手く行かず、ヘッダーの文字列（日本語）が文字化けしているので、1行目を削除する。
+//   array.shift();
+//
+//   sumTime = array[0].split(',')[19];
+//
+//   // 文字化けするため、2行目の合計時間を取得した後、2行目を削除する。
+//   array.shift();
+//
+//   // 何故か最後に空行を認識してしまうので、削除する。
+//   array.pop();
+//
+//   timeDatas = I.OrderedMap(array.map((a, i) => [i + 1, getTimeDataFromAction(i + 1, a)]));
+//   return timeDatas;
+// }
 
 export function addGenreTimes(timeDataId, genreTimeId, inputGenreTime) {
   var targetData = timeDatas.get(timeDataId);
@@ -71,3 +91,29 @@ export function getRestTimeDetailsFromStore() {
   // カンマ区切りになっているので、カンマを削除する。
   return String(details).replace(/,/g, '');
 }
+
+export class UploadFileStore extends Store {
+  getAll() {
+    return fileDatas;
+  }
+  
+  getTotalTime() {
+    return totalTime;
+  }
+}
+
+export default new UploadFileStore();
+
+
+// AppDispatcher.register(action => {
+//   switch (action.actionType) {
+//
+//     case ActionTypes.UPLOAD:
+//       store(action.file);
+//       UploadFileStore.emitChange();
+//       break;
+//
+//     default:
+//   }
+//
+// });

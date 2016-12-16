@@ -6,7 +6,7 @@ window.App = {
   render:  () => {
     ReactDom.render(
         <Main />,
-        document.getElementById('root')
+        document.getElementById('contents')
     );
   }
 };

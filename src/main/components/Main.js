@@ -1,19 +1,20 @@
 import React from 'react'
-import {Button} from 'react-bootstrap'
+// import {Button} from 'react-bootstrap'
 import DropZone from 'react-dropzone'
 import CopyToClipboard from 'react-copy-to-clipboard'
 import request from 'superagent'
 import {isNil} from 'lodash'
 import List from './List.jsx'
 //import TimeModal from './TimeModal.jsx'
-import {getDatas, addGenreTimes, updateRestTime, getDetailsFromStore, getRestTimeDetailsFromStore} from '../stores/TimeDataStore.js'
+// import {getDatas, addGenreTimes, updateRestTime, getDetailsFromStore, getRestTimeDetailsFromStore} from '../stores/TimeDataStore.js'
+import UploadFileStore from '../stores/UploadFileStore.js'
+import UploadFileActionCreators from '../actions/UploadFileActionCreators.js'
 
 export default class Main extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       uploadFile: null,
-      //datas: {},
       uploadFinish: false,
       timeCardDatas: null,
       genreName: '',
@@ -21,10 +22,16 @@ export default class Main extends React.Component {
       modalOpen: false,
       targetGenreId: null
     }
+    
+    this._onChangeFile = this.onChangeFile.bind(this);
   };
 
   componentWillMount() {
-    this.loadDatas();
+    UploadFileStore.addChangeListener(this._onChangeFile);
+  }
+  
+  componentWillUnmount() {
+    UploadFileStore.removeChangeListener(this._onChangeFile);
   }
 
   render() {
@@ -56,13 +63,7 @@ export default class Main extends React.Component {
             </td>)}
           </tr>
         </div>);
-
-    //const getTitle = id => this.state.additionalHeaders[id];
-    //
-    //const timeModalElm = this.state.additionalHeaders.length === 0 ? null :
-    //    (<TimeModal show={this.state.modalOpen} title={getTitle(this.state.targetGenreId - 1)}
-    //                genreId={this.state.targetGenreId} onHide={this.setState({modalOpen: !this.state.modalOpen})}/>);
-
+    
     return (
         <div>
           <DropZone
@@ -86,32 +87,28 @@ export default class Main extends React.Component {
     );
   }
 
-  loadDatas() {
-    // 読み込み時に、ローカル内のファイルを取得するメソッドである。
-    //request
-    //    .get('/data')
-    //    .end(function (err, res) {
-    //      this.setState({datas: res.body});
-    //    }.bind(this));
-  }
-
   onSelectFile(file) {
     this.setState({uploadFile: file, timeCardDatas: null, additionalHeaders: []})
   }
 
   uploadCsvFile() {
-    var formData = new FormData();
-    formData.append("userfile", this.state.uploadFile[0]);
-
-    request
-        .post('/upload')
-        .send(formData)
-        .end(function (err, res) {
-
-          var timeDatas = getDatas(res.text.split(/\r\n|\r|\n/));
-
-          this.setState({uploadFile: null, uploadFinish: true, timeCardDatas: timeDatas});
-        }.bind(this));
+    // var formData = new FormData();
+    // formData.append("userfile", this.state.uploadFile[0]);
+    //
+    // request
+    //     .post('/upload')
+    //     .send(formData)
+    //     .end(function (err, res) {
+    //
+    //       var timeDatas = getDatas(res.text.split(/\r\n|\r|\n/));
+    //
+    //       this.setState({uploadFile: null, uploadFinish: true, timeCardDatas: timeDatas});
+    //     }.bind(this));
+    UploadFileActionCreators.uploadFile(this.state.uploadFile[0]);
+  }
+  
+  onChangeFile() {
+    this.setState({uploadFile: null, uploadFinish: true, timeCardDatas: null});
   }
 
   addGenre() {
