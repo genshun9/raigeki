@@ -1,4 +1,5 @@
 import I from 'immutable'
+import {isNil} from 'lodash'
 import AppDispatcher from '../dispatchers/AppDispatcher.js'
 import {ActionTypes} from '../constants/Constants.js'
 import Store from './Store.js'
@@ -31,6 +32,29 @@ function store(array) {
 export class UploadFileStore extends Store {
   getAll() {
     return uploadFileDatas;
+  }
+
+  getDetails(id) {
+    var details = [];
+    uploadFileDatas.forEach(t => {
+      if (t.startTime === '') {
+        // 土日のデータを削除する
+      } else if (isNil(t.genreTimes.toArray()[id - 1])) {
+        details.push(`${t.date} ${'00:00'}\n`);
+      } else if (t.genreTimes.toArray()[id - 1].time === '') {
+        details.push(`${t.date} ${'00:00'}\n`);
+      } else if (!isNil(t.genreTimes.toArray()[id - 1].time)) {
+        details.push(`${t.date} ${addDigits(t.genreTimes.toArray()[id - 1].time)}\n`);
+      }
+    });
+
+    // カンマ区切りになっているので、カンマを削除する。
+    console.log("中身",  String(details).replace(/,/g, ''));
+    return String(details).replace(/,/g, '');
+  }
+
+  getRestTimeDetails() {
+    return null;
   }
   
   getTotalTime() {

@@ -21,31 +21,34 @@ export default class Main extends React.Component {
       additionalHeaders: [],
       modalOpen: false,
       targetGenreId: null
-    }
-    
-    this._onChangeFile = this.onChangeFile.bind(this);
+    };
+
+    this._onChangeUploadFile = this.onChangeUploadFile.bind(this);
   };
 
   componentWillMount() {
-    UploadFileStore.addChangeListener(this._onChangeFile);
+    UploadFileStore.addChangeListener(this._onChangeUploadFile);
   }
-  
+
   componentWillUnmount() {
-    UploadFileStore.removeChangeListener(this._onChangeFile);
+    UploadFileStore.removeChangeListener(this._onChangeUploadFile);
   }
 
   render() {
-    const headers = ['日', '開始時刻', '終了時刻', '勤務時間'].concat(this.state.additionalHeaders);
+    const initialHeaders = ['日', '開始時刻', '終了時刻', '勤務時間'];
+    const headers = initialHeaders.concat(this.state.additionalHeaders);
 
-    const genreAddPanel = (<div>
-      <input value={this.state.genreName} onChange={e => this.setState({genreName: e.target.value})} type="text"
-             placeholder="カテゴリー名を入力"/>
-      <button onClick={this.addGenre.bind(this)} disabled={this.state.genreName === ''}>{'カテゴリーの追加'}</button>
-    </div>);
+    const genreAddPanel = (
+      <div>
+        <input value={this.state.genreName} onChange={e => this.setState({genreName: e.target.value})} type="text"
+             placeholder="ジャンル名を入力"/>
+        <button onClick={this.onClickAddGenre.bind(this)} disabled={this.state.genreName === ''}>{'ジャンルの追加'}</button>
+      </div>
+    );
 
-    const getDetails = id => getDetailsFromStore(id);
+    const getDetails = id => UploadFileStore.getDetails(id);
 
-    const getRestTimeDetails = () => getRestTimeDetailsFromStore();
+    // const getRestTimeDetails = () => getRestTimeDetailsFromStore();
 
     const headerElm = (
         <div>
@@ -57,13 +60,13 @@ export default class Main extends React.Component {
               </td>
                   : <td><input defaultValue={h} key={i}/></td>)}
             {(<td><input defaultValue='残りの時間'/>
-              <CopyToClipboard text={isNil(this.state.timeCardDatas) ? '' : getRestTimeDetails()} onCopy={() => {}}>
+              <CopyToClipboard text={isNil(this.state.timeCardDatas) ? '' : UploadFileStore.getRestTimeDetails()} onCopy={() => {}}>
                 <button>{'コピー'}</button>
               </CopyToClipboard>
             </td>)}
           </tr>
         </div>);
-    
+
     return (
         <div>
           <DropZone
@@ -75,12 +78,12 @@ export default class Main extends React.Component {
             </div>
           </DropZone>
           {!isNil(this.state.uploadFile) ? <div>{'csvファイルの選択完了です'}</div> : null}
-          <button onClick={this.uploadCsvFile.bind(this)} disabled={isNil(this.state.uploadFile)}>{'データを表示する'}</button>
+          <button onClick={this.onClickUploadFile.bind(this)} disabled={isNil(this.state.uploadFile)}>{'データを表示する'}</button>
           {isNil(this.state.timeCardDatas) ? null :
               <div>{genreAddPanel}
                 {headerElm}
-                {this.state.timeCardDatas.map((t, i) =>
-                    <List data={t} key={i} header={headers} addGenreTimes={this.addGenreTimes.bind(this)}
+                {this.state.timeCardDatas.map(t =>
+                    <List data={t} key={t.id} header={headers} addGenreTimes={this.addGenreTimes.bind(this)}
                           updateRestTime={this.updateRestTime.bind(this)}/>)}
               </div>}
         </div>
@@ -91,27 +94,15 @@ export default class Main extends React.Component {
     this.setState({uploadFile: file, timeCardDatas: null, additionalHeaders: []})
   }
 
-  uploadCsvFile() {
-    // var formData = new FormData();
-    // formData.append("userfile", this.state.uploadFile[0]);
-    //
-    // request
-    //     .post('/upload')
-    //     .send(formData)
-    //     .end(function (err, res) {
-    //
-    //       var timeDatas = getDatas(res.text.split(/\r\n|\r|\n/));
-    //
-    //       this.setState({uploadFile: null, uploadFinish: true, timeCardDatas: timeDatas});
-    //     }.bind(this));
+  onClickUploadFile() {
     UploadFileActionCreators.uploadFile(this.state.uploadFile[0]);
   }
-  
-  onChangeFile() {
-    this.setState({uploadFile: null, uploadFinish: true, timeCardDatas: null});
+
+  onChangeUploadFile() {
+    this.setState({uploadFile: null, uploadFinish: true, timeCardDatas: UploadFileStore.getAll()});
   }
 
-  addGenre() {
+  onClickAddGenre() {
     this.setState({genreName: '', additionalHeaders: this.state.additionalHeaders.concat(this.state.genreName)})
   }
 
