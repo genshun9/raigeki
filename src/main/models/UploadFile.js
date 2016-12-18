@@ -1,12 +1,8 @@
 import I from 'immutable'
 
-function getValue(str) {
-  return str.substr(1, str.length - 2);
-}
-
-const uploadFile = {
+const defaultUploadFile = {
   id: null,
-  date: null,
+  dateTime: null,
   startTime: null,
   endTime: null,
   workTime: null,
@@ -14,24 +10,16 @@ const uploadFile = {
   genreTimes: I.List()
 };
 
-export default class UploadFile extends I.Record(uploadFile) {
-  // id: number;
-  // date;
-  // startTime;
-  // endTime;
-  // workTime;
-  // restTime;
-  // genreTimes;
-  
-  static getUploadFileFromAction(id, data) {
-    let props;
+export default class UploadFile extends I.Record(defaultUploadFile) {
+
+  static getUploadFileFromAction(id, convertedArrayData) {
+    let props = {};
     props.id = id;
-    props.date = getValue(data.split(',')[4]);
-    props.startTime = getValue(data.split(',')[16]);
-    props.endTime = getValue(data.split(',')[17]);
-    props.workTime = getValue(data.split(',')[19]);
-    props.restTime = getValue(data.split(',')[19]);
-    props.genreTimes = I.List();
+    props.dateTime = convertedArrayData[4];
+    props.startTime = convertedArrayData[16];
+    props.endTime = convertedArrayData[17];
+    props.workTime = convertedArrayData[19];
+    props.restTime = convertedArrayData[19];
     return new UploadFile(props);
   }
   

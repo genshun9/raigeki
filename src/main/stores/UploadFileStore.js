@@ -1,10 +1,11 @@
+import I from 'immutable'
 import AppDispatcher from '../dispatchers/AppDispatcher.js'
 import {ActionTypes} from '../constants/Constants.js'
 import Store from './Store.js'
 import UploadFile from '../models/UploadFile.js'
 
 let totalTime = null;
-let fileDatas = null;
+let uploadFileDatas = null;
 
 function store(array) {
   // 現在文字コードの変換が上手く行かず、ヘッダーの文字列（日本語）が文字化けしている
@@ -17,29 +18,34 @@ function store(array) {
   
   // 最後に空行を認識してしまうので、削除する。
   array.pop();
-  
-  fileDatas = I.OrderedMap(array.map(
-    (a, i) => [i + 1, UploadFile.getUploadFileFromAction(i + 1, a)]
+
+  uploadFileDatas = I.OrderedMap(array.map(
+    (a, i) => {
+      // 各エクセルの行のデータからダブルクオーテーションを取り除いて配列化させる
+      const convertedArrayData = a.split(',').map(a => a.substr(1, a.length - 2));
+      return [i + 1, UploadFile.getUploadFileFromAction(i + 1, convertedArrayData)]
+    }
   ));
 }
 
 export class UploadFileStore extends Store {
   getAll() {
-    return fileDatas;
+    return uploadFileDatas;
   }
   
   getTotalTime() {
-    return totalTime;
+    return uploadFileDatas;
   }
 }
 
-export default new UploadFileStore();
+const uploadFileStore = new UploadFileStore();
+export default uploadFileStore;
 
 AppDispatcher.register(action => {
   switch (action.actionType) {
     case ActionTypes.UPLOAD:
-      store(action.file);
-      UploadFileStore.emitChange();
+      store(action.data);
+      uploadFileStore.emitChange();
       break;
     
     default:

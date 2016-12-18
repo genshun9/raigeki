@@ -10,9 +10,10 @@ export default {
       .post('/upload')
       .send(formData)
       .end(function (err, res) {
+        // TODO: 文字化けするので、扱いやすい配列に変換している
         AppDispatcher.dispatch({
           actionType: ActionTypes.UPLOAD,
-          data: res.body
+          data: res.text.split(/\r\n|\r|\n/)
         })
       })
   }
