@@ -14,7 +14,7 @@ export default class List extends React.Component {
     this.state = {
       header: props.header,
       id: props.data.id,
-      date: props.data.date,
+      dateTime: props.data.dateTime,
       startTime: props.data.startTime,
       endTime: props.data.endTime,
       workTime: props.data.workTime,
@@ -36,8 +36,10 @@ export default class List extends React.Component {
     }
 
     const additionalInputElms = this.state.header.map((h, i) =>
-        (i > 3) ? <td>
-          <div><input type="text" placeholder={`${h}に関する時間を入力`} key={i}
+        (i > 3) ?
+          <td>
+          <div>
+            <input type="text" placeholder={`${h}に関する時間を入力`} key={i}
                       onChange={e => this.props.addGenreTimes(this.state.id, i - 3, e.target.value)}/>
           </div>
         </td> : null
@@ -47,7 +49,7 @@ export default class List extends React.Component {
         <div >
           <tr>
             <td>
-              <div><input defaultValue={this.state.date} disabled={false}/></div>
+              <div><input defaultValue={this.state.dateTime} disabled={false}/></div>
             </td>
             <td>
               <div><input defaultValue={this.state.startTime}/></div>
