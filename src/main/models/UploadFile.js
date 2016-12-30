@@ -11,7 +11,7 @@ const defaultUploadFile = {
 };
 
 export default class UploadFile extends I.Record(defaultUploadFile) {
-
+  
   static getUploadFileFromAction(id, convertedArrayData) {
     let props = {};
     props.id = id;

@@ -1,6 +1,5 @@
 import React from 'react'
 import {isNil} from 'lodash'
-import If from 'ifx'
 import {addGenreTimes} from '../stores/TimeDataStore.js'
 import {convertMinutesFromData, convertDataFromMinutes} from '../utils/dataUtils.js'
 
@@ -22,56 +21,56 @@ export default class List extends React.Component {
       genreTimes: props.data.genreTimes
     };
   };
-
+  
   componentWillReceiveProps(nextProps) {
     this.setState({header: nextProps.header, genreTimes: nextProps.data.genreTimes, restTime: nextProps.data.restTime});
   }
-
+  
   render() {
     // 土日の場合削除する。
     if (this.state.startTime.substr(1, this.state.startTime.length - 2) === "") {
       return (
-          <div />
+        <div />
       )
     }
-
+    
     const additionalInputElms = this.state.header.map((h, i) =>
-        (i > 3) ?
-          <td>
+      (i > 3) ?
+        <td>
           <div>
             <input type="text" placeholder={`${h}に関する時間を入力`} key={i}
-                      onChange={e => this.props.addGenreTimes(this.state.id, i - 3, e.target.value)}/>
+                   onChange={e => this.props.addGenreTimes(this.state.id, i - 3, e.target.value)}/>
           </div>
         </td> : null
     );
-
+    
     return (
-        <div >
-          <tr>
-            <td>
-              <div><input defaultValue={this.state.dateTime} disabled={false}/></div>
-            </td>
-            <td>
-              <div><input defaultValue={this.state.startTime}/></div>
-            </td>
-            <td>
-              <div><input defaultValue={this.state.endTime}/></div>
-            </td>
-            <td>
-              <div><input defaultValue={this.state.workTime}/></div>
-            </td>
-            {additionalInputElms}
-            <td>
-              <div><input value={this.state.restTime}/>
-                <button disabled={this.state.genreTimes.size === 0}
-                        onClick={this.updateRestTime.bind(this)}>{'残りの時間を更新'}</button>
-              </div>
-            </td>
-          </tr>
-        </div>
+      <div >
+        <tr>
+          <td>
+            <div><input defaultValue={this.state.dateTime} disabled={false}/></div>
+          </td>
+          <td>
+            <div><input defaultValue={this.state.startTime}/></div>
+          </td>
+          <td>
+            <div><input defaultValue={this.state.endTime}/></div>
+          </td>
+          <td>
+            <div><input defaultValue={this.state.workTime}/></div>
+          </td>
+          {additionalInputElms}
+          <td>
+            <div><input value={this.state.restTime}/>
+              <button disabled={this.state.genreTimes.size === 0}
+                      onClick={this.updateRestTime.bind(this)}>{'残りの時間を更新'}</button>
+            </div>
+          </td>
+        </tr>
+      </div>
     );
   }
-
+  
   updateRestTime() {
     var sumGenreTimes = 0;
     this.state.genreTimes.toArray().forEach(g => {

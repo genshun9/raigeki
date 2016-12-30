@@ -20,7 +20,7 @@ function store(array) {
   
   // 最後に空行を認識してしまうので、削除する。
   array.pop();
-
+  
   uploadFileDatas = I.OrderedMap(array.map(
     (a, i) => {
       // 各エクセルの行のデータからダブルクオーテーションを取り除いて配列化させる
@@ -41,7 +41,7 @@ export class UploadFileStore extends Store {
   getAllFileDatas() {
     return uploadFileDatas;
   }
-
+  
   getDetails(id) {
     var details = [];
     uploadFileDatas.forEach(t => {
@@ -55,12 +55,12 @@ export class UploadFileStore extends Store {
         details.push(`${t.date} ${addDigits(t.genreTimes.toArray()[id - 1].time)}\n`);
       }
     });
-
+    
     // カンマ区切りになっているので、カンマを削除する。
-    console.log("中身",  String(details).replace(/,/g, ''));
+    console.log("中身", String(details).replace(/,/g, ''));
     return String(details).replace(/,/g, '');
   }
-
+  
   getRestTimeDetails() {
     return null;
   }
