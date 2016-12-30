@@ -2,7 +2,6 @@ import React from 'react'
 // import {Button} from 'react-bootstrap'
 import DropZone from 'react-dropzone'
 import CopyToClipboard from 'react-copy-to-clipboard'
-import request from 'superagent'
 import {isNil} from 'lodash'
 import List from './List.jsx'
 //import TimeModal from './TimeModal.jsx'
@@ -14,11 +13,12 @@ export default class Main extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      uploadFile: null,
+      selectFile: null,
       uploadFinish: false,
-      timeCardDatas: null,
+      uploadFileDatas: null,
       genreName: '',
       additionalHeaders: [],
+      
       modalOpen: false,
       targetGenreId: null
     };
@@ -60,7 +60,7 @@ export default class Main extends React.Component {
               </td>
                   : <td><input defaultValue={h} key={i}/></td>)}
             {(<td><input defaultValue='残りの時間'/>
-              <CopyToClipboard text={isNil(this.state.timeCardDatas) ? '' : UploadFileStore.getRestTimeDetails()} onCopy={() => {}}>
+              <CopyToClipboard text={isNil(this.state.uploadFileDatas) ? '' : UploadFileStore.getRestTimeDetails()} onCopy={() => {}}>
                 <button>{'コピー'}</button>
               </CopyToClipboard>
             </td>)}
@@ -77,12 +77,12 @@ export default class Main extends React.Component {
               <p>形式: csv</p>
             </div>
           </DropZone>
-          {!isNil(this.state.uploadFile) ? <div>{'csvファイルの選択完了です'}</div> : null}
-          <button onClick={this.onClickUploadFile.bind(this)} disabled={isNil(this.state.uploadFile)}>{'データを表示する'}</button>
-          {isNil(this.state.timeCardDatas) ? null :
+          {!isNil(this.state.selectFile) ? <div>{'csvファイルの選択完了です'}</div> : null}
+          <button onClick={this.onClickUploadFile.bind(this)} disabled={isNil(this.state.selectFile)}>{'データを表示する'}</button>
+          {isNil(this.state.uploadFileDatas) ? null :
               <div>{genreAddPanel}
                 {headerElm}
-                {this.state.timeCardDatas.map(t =>
+                {this.state.uploadFileDatas.map(t =>
                     <List data={t} key={t.id} header={headers} addGenreTimes={this.addGenreTimes.bind(this)}
                           updateRestTime={this.updateRestTime.bind(this)}/>)}
               </div>}
@@ -91,28 +91,31 @@ export default class Main extends React.Component {
   }
 
   onSelectFile(file) {
-    this.setState({uploadFile: file, timeCardDatas: null, additionalHeaders: []})
+    this.setState({selectFile: file, uploadFileDatas: null, additionalHeaders: []})
   }
 
   onClickUploadFile() {
-    UploadFileActionCreators.uploadFile(this.state.uploadFile[0]);
+    UploadFileActionCreators.uploadFile(this.state.selectFile[0]);
   }
 
   onChangeUploadFile() {
-    this.setState({uploadFile: null, uploadFinish: true, timeCardDatas: UploadFileStore.getAll()});
+    this.setState({selectFile: null, uploadFinish: true, uploadFileDatas: UploadFileStore.getAllFileDatas()});
   }
 
   onClickAddGenre() {
     this.setState({genreName: '', additionalHeaders: this.state.additionalHeaders.concat(this.state.genreName)})
   }
+  
+  
+  
 
   addGenreTimes(id, genreTimeId, value) {
     var timeDatas = addGenreTimes(id, genreTimeId, value);
-    this.setState({timeCardDatas: timeDatas});
+    this.setState({uploadFileDatas: timeDatas});
   }
 
   updateRestTime(id, updatedRestTime) {
     var timeDatas = updateRestTime(id, updatedRestTime);
-    this.setState({timeCardDatas: timeDatas});
+    this.setState({uploadFileDatas: timeDatas});
   }
 }

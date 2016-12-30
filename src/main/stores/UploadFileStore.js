@@ -13,8 +13,9 @@ function store(array) {
   // 初めに1行目を削除する。
   array.shift();
   
-  // 2行目の合計時間を取得した後、2行目を削除する。
-  totalTime = array[0].split(',')[19];
+  // 2行目のダブルクオーテーションを取り除いて合計時間を取得した後、2行目を削除する。
+  const totalTimeStr = array[0].split(',')[19];
+  totalTime = totalTimeStr.substr(1, totalTimeStr.length - 2);
   array.shift();
   
   // 最後に空行を認識してしまうので、削除する。
@@ -27,10 +28,17 @@ function store(array) {
       return [i + 1, UploadFile.getUploadFileFromAction(i + 1, convertedArrayData)]
     }
   ));
+  
+  // 土日や休日のデータを削除する
+  uploadFileDatas.forEach(d => {
+    if (d.startTime === '') {
+      uploadFileDatas = uploadFileDatas.delete(d.id);
+    }
+  });
 }
 
 export class UploadFileStore extends Store {
-  getAll() {
+  getAllFileDatas() {
     return uploadFileDatas;
   }
 
@@ -58,7 +66,7 @@ export class UploadFileStore extends Store {
   }
   
   getTotalTime() {
-    return uploadFileDatas;
+    return totalTime;
   }
 }
 
