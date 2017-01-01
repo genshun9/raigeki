@@ -33,10 +33,7 @@ export default class UploadFile extends I.Record(defaultUploadFile) {
     return this.set('genreTimes', targetGenreTimes);
   }
   
-  static editRestTime(targetData, restTime) {
-    var timeData = targetData;
-    delete timeData.restTime;
-    timeData.restTime = restTime;
-    return timeData;
+  updateRestTime(value) {
+    return this.set('restTime', value);
   }
 }

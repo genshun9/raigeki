@@ -4,6 +4,7 @@ import AppDispatcher from '../dispatchers/AppDispatcher.js'
 import {ActionTypes} from '../constants/Constants.js'
 import Store from './Store.js'
 import UploadFile from '../models/UploadFile.js'
+import {convertMinutesFromData, convertMinutsToData} from '../utils/dataUtils.js'
 
 let totalTime = null;
 let uploadFileDatas = null;
@@ -77,12 +78,42 @@ export class UploadFileStore extends Store {
     return totalTime;
   }
   
+  updateAllRestTime() {
+    uploadFileDatas.forEach(d => {
+      let restTime = convertMinutesFromData(d.restTime);
+      let workTime = convertMinutesFromData(d.workTime);
+      d.genreTimes.map(t => {
+        restTime = workTime - convertMinutesFromData(t);
+      });
+      uploadFileDatas = uploadFileDatas.set(d.id, d.updateRestTime(convertMinutsToData(restTime)));
+    });
+    
+    // Actionを通過せずに、ここでemitChangeする
+    this.emitChangeRestTime();
+  }
+  
   addChangeGenreListener(callback) {
     this.on('change-genre', callback);
   }
   
   emitChangeGenre() {
     this.emit('change-genre');
+  }
+  
+  removeChangeGenreListener(callback) {
+    this.off('change-genre', callback);
+  }
+  
+  addChangeRestTimeListener(callback) {
+    this.on('change-rest-time', callback);
+  }
+  
+  emitChangeRestTime() {
+    this.emit('change-rest-time');
+  }
+  
+  removeChangeRestTimeListener(callback) {
+    this.off('change-rest-time', callback);
   }
 }
 

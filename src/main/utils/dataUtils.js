@@ -1,16 +1,13 @@
-export function convertMinutesFromData(time) {
-  var hourPart = time.split(':')[0];
-  var minutePart = time.split(':')[1];
-  var minutes = Number(hourPart) * 60 + Number(minutePart);
-  return minutes;
+export function convertMinutesFromData(data) {
+  const hourPart = data.split(':')[0];
+  const minutePart = data.split(':')[1];
+  return Number(hourPart) * 60 + Number(minutePart);
 }
 
-export function convertDataFromMinutes(workTime, sumGenreTime) {
-  var restTime = workTime - sumGenreTime;
-  var hourPart = Math.floor(restTime / 60);
-  var minutePart = restTime - hourPart * 60;
-  var timeData = `${addDigits(hourPart)}:${addDigits(minutePart)}`;
-  return timeData;
+export function convertMinutsToData(minute) {
+  const hourPart = Math.floor(minute / 60);
+  const minutePart = minute - hourPart * 60;
+  return `${addDigits(hourPart)}:${addDigits(minutePart)}`;
 }
 
 export function addDigits(input) {

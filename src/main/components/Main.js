@@ -18,16 +18,19 @@ export default class Main extends React.Component {
     
     this._onChangeUploadFile = this.onChangeUploadFile.bind(this);
     this._onChangeAddGenre = this.onChangeAddGenre.bind(this);
+    this._onChangeRestTime = this.onChangeRestTime.bind(this);
   };
   
   componentWillMount() {
     UploadFileStore.addChangeListener(this._onChangeUploadFile);
     UploadFileStore.addChangeGenreListener(this._onChangeAddGenre);
+    UploadFileStore.addChangeRestTimeListener(this._onChangeRestTime);
   }
   
   componentWillUnmount() {
     UploadFileStore.removeChangeListener(this._onChangeUploadFile);
-    UploadFileStore.removeChangeListener(this._onChangeAddGenre);
+    UploadFileStore.removeChangeGenreListener(this._onChangeAddGenre);
+    UploadFileStore.removeChangeRestTimeListener(this._onChangeRestTime);
   }
   
   render() {
@@ -98,6 +101,10 @@ export default class Main extends React.Component {
                     }}>
                     <Button>{'コピー'}</Button>
                   </CopyToClipboard>
+                  <Button disabled={this.state.additionalHeaders.length === 0}
+                          onClick={this.updateAllRestTime.bind(this)}>
+                    {'残りの時間を更新'}
+                  </Button>
                 </td>)}
               </tr>
               </thead>
@@ -109,12 +116,7 @@ export default class Main extends React.Component {
                   <td>{t.endTime}</td>
                   <td>{t.workTime}</td>
                   {additionalInputElms(t.id)}
-                  <td>{t.restTime}
-                    <Button disabled={t.genreTimes.size === 0}
-                            onClick={this.updateRestTime.bind(this)}>
-                      {'残りの時間を更新'}
-                    </Button>
-                  </td>
+                  <td>{t.restTime}</td>
                 </tr>
               )}
               </tbody>
@@ -141,6 +143,10 @@ export default class Main extends React.Component {
     this.setState({genreName: '', additionalHeaders: additionalHeaders, uploadFileDatas: UploadFileStore.getAllFileDatas()});
   }
   
+  onChangeRestTime() {
+    this.setState({uploadFileDatas: UploadFileStore.getAllFileDatas()});
+  }
+  
   onClickAddGenre() {
     const additionalHeaders = this.state.additionalHeaders.concat(this.state.genreName);
     UploadFileActionCreators.addGenre(additionalHeaders.length);
@@ -152,8 +158,7 @@ export default class Main extends React.Component {
     UploadFileActionCreators.editFile(editedTargetFileData.id, editedTargetFileData);
   }
   
-  updateRestTime(id, updatedRestTime) {
-    var timeDatas = updateRestTime(id, updatedRestTime);
-    this.setState({uploadFileDatas: timeDatas});
+  updateAllRestTime() {
+    UploadFileStore.updateAllRestTime();
   }
 }
