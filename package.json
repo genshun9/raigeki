@@ -1,7 +1,7 @@
 {
   "name": "raigeki",
   "version": "1.0.0",
-  "description": "## カード紹介",
+  "description": "MINAZINEのcsvファイルをアップロードし、勤怠管理をしやすくする管理アプリ",
   "main": "index.js",
   "scripts": {
     "production": "webpack -p",
