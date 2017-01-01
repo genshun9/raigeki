@@ -1,10 +1,9 @@
 const path = require('path');
 const json = require('json-loader');
-//var xml = require('xml-loader');
 
 module.exports = {
   entry: {
-    bundle: './src/main/entry.js'
+    bundle: './src/client/entry.js'
   },
   output: {
     path: path.join(__dirname, 'build'),
