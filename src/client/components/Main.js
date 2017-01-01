@@ -1,5 +1,5 @@
 import React from 'react'
-import {Button, Table, FieldGroup} from 'react-bootstrap'
+import {Button, Table} from 'react-bootstrap'
 import DropZone from 'react-dropzone'
 import CopyToClipboard from 'react-copy-to-clipboard'
 import {isNil} from 'lodash'
@@ -59,7 +59,7 @@ export default class Main extends React.Component {
         <div>
           <input value={this.state.genreName} onChange={e => this.setState({genreName: e.target.value})}
                  type="text" placeholder="ジャンル名を入力"/>
-          <button onClick={this.onClickAddGenre.bind(this)} disabled={this.state.genreName === ''}>{'ジャンルの追加'}</button>
+          <Button onClick={this.onClickAddGenre.bind(this)} disabled={this.state.genreName === ''}>{'ジャンルの追加'}</Button>
         </div>
       );
   
