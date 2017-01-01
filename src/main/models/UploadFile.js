@@ -7,7 +7,7 @@ const defaultUploadFile = {
   endTime: null,
   workTime: null,
   restTime: null,
-  genreTimes: I.List()
+  genreTimes: I.Map()
 };
 
 export default class UploadFile extends I.Record(defaultUploadFile) {
@@ -23,11 +23,14 @@ export default class UploadFile extends I.Record(defaultUploadFile) {
     return new UploadFile(props);
   }
   
-  static editGenreTimes(targetData, targetGenreTimes) {
-    var timeData = targetData;
-    delete timeData.genreTimes;
-    timeData.genreTimes = targetGenreTimes;
-    return timeData
+  set(key, value) {
+    return super.set(key, value);
+  }
+  
+  updateGenreTimes(genreId, value) {
+    let targetGenreTimes = this.genreTimes;
+    targetGenreTimes = targetGenreTimes.set(genreId, value);
+    return this.set('genreTimes', targetGenreTimes);
   }
   
   static editRestTime(targetData, restTime) {

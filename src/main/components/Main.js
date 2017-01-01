@@ -3,7 +3,6 @@ import {Button, Table} from 'react-bootstrap'
 import DropZone from 'react-dropzone'
 import CopyToClipboard from 'react-copy-to-clipboard'
 import {isNil} from 'lodash'
-// import {getDatas, addGenreTimes, updateRestTime, getDetailsFromStore, getRestTimeDetailsFromStore} from '../stores/TimeDataStore.js'
 import UploadFileStore from '../stores/UploadFileStore.js'
 import UploadFileActionCreators from '../actions/UploadFileActionCreators.js'
 
@@ -58,62 +57,15 @@ export default class Main extends React.Component {
         </div>
       );
   
-      const additionalInputElms = headers.map((h, i) =>
+      const additionalInputElms = (dataId) => headers.map((h, i) =>
         (i > 3) ?
           <td>
             <div>
               <input type="text" placeholder={`${h}に関する時間を入力`} key={i}
-                     onChange={e => this.props.addGenreTimes(this.state.id, i - 3, e.target.value)}/>
+                     onChange={e => this.updateGenreTime(dataId, i - 3, e.target.value)}/>
             </div>
           </td> : null
       );
-      
-      // const headerElm = (
-      //   <div>
-      //     <Table condensed hover>
-      //       <thead>
-      //       <tr key="initial-header">
-      //         {initialHeaders.map((h, i) => <td>{h}</td>)}
-      //         {this.state.additionalHeaders.map((h, i) =>
-      //           <td>
-      //             {h}
-      //             <CopyToClipboard
-      //               text={UploadFileStore.getDetails(i - 3)}
-      //               onCopy={() => {}}>
-      //               <Button >{'コピー'}</Button>
-      //             </CopyToClipboard>
-      //           </td>
-      //         )}
-      //         {(<td>
-      //           {'残りの時間'}
-      //           <CopyToClipboard
-      //             text={UploadFileStore.getRestTimeDetails()}
-      //             onCopy={() => {
-      //             }}>
-      //             <Button>{'コピー'}</Button>
-      //           </CopyToClipboard>
-      //         </td>)}
-      //       </tr>
-      //       </thead>
-      //       <tbody>
-      //       {this.state.uploadFileDatas.map(t =>
-      //         <tr>
-      //           <td>{t.dateTime}</td>
-      //           <td>{t.startTime}</td>
-      //           <td>{t.endTime}</td>
-      //           <td>{t.workTime}</td>
-      //           {additionalInputElms}
-      //           <td>{t.restTime}
-      //             <Button disabled={t.genreTimes.size === 0} onClick={this.updateRestTime.bind(this)}>
-      //               {'残りの時間を更新'}
-      //             </Button>
-      //           </td>
-      //         </tr>
-      //       )}
-      //       </tbody>
-      //     </Table>
-      //   </div>
-      // );
       
       return (
         <div>
@@ -151,7 +103,7 @@ export default class Main extends React.Component {
                   <td>{t.startTime}</td>
                   <td>{t.endTime}</td>
                   <td>{t.workTime}</td>
-                  {additionalInputElms}
+                  {additionalInputElms(t.id)}
                   <td>{t.restTime}
                     <Button disabled={t.genreTimes.size === 0} onClick={this.updateRestTime.bind(this)}>
                       {'残りの時間を更新'}
@@ -182,10 +134,10 @@ export default class Main extends React.Component {
     this.setState({genreName: '', additionalHeaders: this.state.additionalHeaders.concat(this.state.genreName)})
   }
   
-  
-  addGenreTimes(id, genreTimeId, value) {
-    var timeDatas = addGenreTimes(id, genreTimeId, value);
-    this.setState({uploadFileDatas: timeDatas});
+  updateGenreTime(dataId, genreTimeId, value) {
+    const targetFileData = UploadFileStore.getOneFileDataById(dataId);
+    const editedTargetFileData = targetFileData.updateGenreTimes(genreTimeId, value);
+    UploadFileActionCreators.editFile(editedTargetFileData.id, editedTargetFileData);
   }
   
   updateRestTime(id, updatedRestTime) {

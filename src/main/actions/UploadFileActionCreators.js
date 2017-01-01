@@ -16,5 +16,13 @@ export default {
           data: res.text.split(/\r\n|\r|\n/)
         })
       })
+  },
+  
+  editFile(id, data) {
+    AppDispatcher.dispatch({
+      actionType: ActionTypes.EDIT,
+      data: data,
+      targetId: id
+    })
   }
 }

@@ -37,9 +37,18 @@ function store(array) {
   });
 }
 
+function edit(id, data) {
+  uploadFileDatas = uploadFileDatas.set(id, data);
+}
+
 export class UploadFileStore extends Store {
+  
   getAllFileDatas() {
     return uploadFileDatas;
+  }
+  
+  getOneFileDataById(id) {
+    return uploadFileDatas.get(id);
   }
   
   getDetails(id) {
@@ -79,7 +88,11 @@ AppDispatcher.register(action => {
       store(action.data);
       uploadFileStore.emitChange();
       break;
-    
+  
+    case ActionTypes.EDIT:
+      edit(action.targetId, action.data);
+      uploadFileStore.emitChange();
+      break;
     default:
   }
 });
