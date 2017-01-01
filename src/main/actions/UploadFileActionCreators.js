@@ -18,6 +18,13 @@ export default {
       })
   },
   
+  addGenre(genreId) {
+    AppDispatcher.dispatch({
+      actionType: ActionTypes.ADD_GENRE,
+      genreId: genreId
+    })
+  },
+  
   editFile(id, data) {
     AppDispatcher.dispatch({
       actionType: ActionTypes.EDIT,

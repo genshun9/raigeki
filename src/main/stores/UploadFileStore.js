@@ -37,6 +37,13 @@ function store(array) {
   });
 }
 
+function addGenre(genreId) {
+  uploadFileDatas.forEach(d => {
+    const targetDatas = d.updateGenreTimes(genreId, '00:00');
+    uploadFileDatas = uploadFileDatas.set(d.id, targetDatas);
+  });
+}
+
 function edit(id, data) {
   uploadFileDatas = uploadFileDatas.set(id, data);
 }
@@ -77,6 +84,14 @@ export class UploadFileStore extends Store {
   getTotalTime() {
     return totalTime;
   }
+  
+  addChangeGenreListener(callback) {
+    this.on('change-genre', callback);
+  }
+  
+  emitChangeGenre() {
+    this.emit('change-genre');
+  }
 }
 
 const uploadFileStore = new UploadFileStore();
@@ -87,6 +102,11 @@ AppDispatcher.register(action => {
     case ActionTypes.UPLOAD:
       store(action.data);
       uploadFileStore.emitChange();
+      break;
+  
+    case ActionTypes.ADD_GENRE:
+      addGenre(action.genreId);
+      uploadFileStore.emitChangeGenre();
       break;
   
     case ActionTypes.EDIT:

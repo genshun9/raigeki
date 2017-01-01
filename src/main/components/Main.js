@@ -1,5 +1,5 @@
 import React from 'react'
-import {Button, Table} from 'react-bootstrap'
+import {Button, Table, FieldGroup} from 'react-bootstrap'
 import DropZone from 'react-dropzone'
 import CopyToClipboard from 'react-copy-to-clipboard'
 import {isNil} from 'lodash'
@@ -17,14 +17,17 @@ export default class Main extends React.Component {
     };
     
     this._onChangeUploadFile = this.onChangeUploadFile.bind(this);
+    this._onChangeAddGenre = this.onChangeAddGenre.bind(this);
   };
   
   componentWillMount() {
     UploadFileStore.addChangeListener(this._onChangeUploadFile);
+    UploadFileStore.addChangeGenreListener(this._onChangeAddGenre);
   }
   
   componentWillUnmount() {
     UploadFileStore.removeChangeListener(this._onChangeUploadFile);
+    UploadFileStore.removeChangeListener(this._onChangeAddGenre);
   }
   
   render() {
@@ -61,8 +64,10 @@ export default class Main extends React.Component {
         (i > 3) ?
           <td>
             <div>
-              <input type="text" placeholder={`${h}に関する時間を入力`} key={i}
-                     onChange={e => this.updateGenreTime(dataId, i - 3, e.target.value)}/>
+              <input
+                id={i} type="text" placeholder={`${h}に関する時間を入力`}
+                onChange={e => this.updateGenreTime(dataId, i - 3, e.target.value)}
+                value={UploadFileStore.getOneFileDataById(dataId).genreTimes.get(i - 3)} />
             </div>
           </td> : null
       );
@@ -105,7 +110,8 @@ export default class Main extends React.Component {
                   <td>{t.workTime}</td>
                   {additionalInputElms(t.id)}
                   <td>{t.restTime}
-                    <Button disabled={t.genreTimes.size === 0} onClick={this.updateRestTime.bind(this)}>
+                    <Button disabled={t.genreTimes.size === 0}
+                            onClick={this.updateRestTime.bind(this)}>
                       {'残りの時間を更新'}
                     </Button>
                   </td>
@@ -130,8 +136,14 @@ export default class Main extends React.Component {
     this.setState({selectFile: null, uploadFileDatas: UploadFileStore.getAllFileDatas()});
   }
   
+  onChangeAddGenre() {
+    const additionalHeaders = this.state.additionalHeaders.concat(this.state.genreName);
+    this.setState({genreName: '', additionalHeaders: additionalHeaders, uploadFileDatas: UploadFileStore.getAllFileDatas()});
+  }
+  
   onClickAddGenre() {
-    this.setState({genreName: '', additionalHeaders: this.state.additionalHeaders.concat(this.state.genreName)})
+    const additionalHeaders = this.state.additionalHeaders.concat(this.state.genreName);
+    UploadFileActionCreators.addGenre(additionalHeaders.length);
   }
   
   updateGenreTime(dataId, genreTimeId, value) {
