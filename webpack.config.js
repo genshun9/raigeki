@@ -1,34 +1,24 @@
 const path = require('path');
-var json = require('json-loader');
-//var xml = require('xml-loader');
+const json = require('json-loader');
 
 module.exports = {
   entry: {
-    bundle: './src/main/entry.js'
+    bundle: './src/client/entry.js'
   },
   output: {
-    path: path.join(__dirname, 'public'),
+    path: path.join(__dirname, 'build'),
     filename: '[name].js'
   },
+  devtool: '#source-map',
   module: {
     loaders: [
-      {
-        loader: 'babel',
-        exclude: /node_modules/,
-        test: /\.js[x]?$/,
+      {loader: 'babel', exclude: /node_modules/, test: /\.js[x]?$/,
         query: {
           cacheDirectory: true,
           presets: ['react', 'es2015']
         }
       },
-      {
-        loader: 'json',
-        test: /\.json$/
-      //},
-      //{
-      //  loader: 'xml',
-      //  test: /\.xml$/
-      }
+      {loader: 'json', test: /\.json$/}
     ]
   }
 };
