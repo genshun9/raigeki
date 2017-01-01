@@ -58,28 +58,20 @@ export class UploadFileStore extends Store {
     return uploadFileDatas.get(id);
   }
   
-  getDetails(id) {
-    var details = [];
-    uploadFileDatas.forEach(t => {
-      if (t.startTime === '') {
-        // 土日のデータを削除する
-      } else if (isNil(t.genreTimes.toArray()[id - 1])) {
-        details.push(`${t.date} ${'00:00'}\n`);
-      } else if (t.genreTimes.toArray()[id - 1].time === '') {
-        details.push(`${t.date} ${'00:00'}\n`);
-      } else if (!isNil(t.genreTimes.toArray()[id - 1].time)) {
-        details.push(`${t.date} ${addDigits(t.genreTimes.toArray()[id - 1].time)}\n`);
-      }
-    });
+  getAllGenreTimesByGenreId(genreId) {
+    let details = [];
+    uploadFileDatas.forEach(d => details.push(d.genreTimes.get(genreId)));
     
-    // カンマ区切りになっているので、カンマを削除する。
-    console.log("中身", String(details).replace(/,/g, ''));
-    return String(details).replace(/,/g, '');
+    // カンマ区切りになっているので、カンマを改行に置き換える
+    return String(details).replace(/,/g, '\n');
   }
   
-  getRestTimeDetails() {
-    return null;
-  }
+  getAllRestTime() {
+    let details = [];
+    uploadFileDatas.forEach(d => details.push(d.restTime));
+  
+    // カンマ区切りになっているので、カンマを改行に置き換える
+    return String(details).replace(/,/g, '\n');  }
   
   getTotalTime() {
     return totalTime;

@@ -79,12 +79,12 @@ export default class Main extends React.Component {
             <Table striped bordered condensed hover>
               <thead>
               <tr key="initial-header">
-                {initialHeaders.map((h, i) => <td>{h}</td>)}
+                {initialHeaders.map(h => <td>{h}</td>)}
                 {this.state.additionalHeaders.map((h, i) =>
                   <td>
                     {h}
                     <CopyToClipboard
-                      text={UploadFileStore.getDetails(i - 3)}
+                      text={UploadFileStore.getAllGenreTimesByGenreId(i + 1)}
                       onCopy={() => {}}>
                       <Button >{'コピー'}</Button>
                     </CopyToClipboard>
@@ -93,7 +93,7 @@ export default class Main extends React.Component {
                 {(<td>
                   {'残りの時間'}
                   <CopyToClipboard
-                    text={UploadFileStore.getRestTimeDetails()}
+                    text={UploadFileStore.getAllRestTime()}
                     onCopy={() => {
                     }}>
                     <Button>{'コピー'}</Button>
